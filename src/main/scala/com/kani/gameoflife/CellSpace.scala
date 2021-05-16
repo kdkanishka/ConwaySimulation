@@ -9,7 +9,7 @@ class CellSpace(m1: Array[Array[Cell]]) {
     for (y <- 0 to m1.size - 1) { // Y axis
       val xSeq = m1(y)
       for (x <- 0 to xSeq.size - 1) {
-        val cell = m1(y)(x)
+        val cell = if(m1(y)(x) != null) m1(y)(x).copy()  else m1(y)(x) //copy instance
         if (cell != null && canDie(cell)) {
           cell.letDie()
         }
