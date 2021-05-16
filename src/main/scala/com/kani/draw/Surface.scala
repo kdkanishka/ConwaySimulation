@@ -1,4 +1,4 @@
-package com.kani
+package com.kani.draw
 
 import java.awt.{Canvas, Color, Graphics, Point}
 

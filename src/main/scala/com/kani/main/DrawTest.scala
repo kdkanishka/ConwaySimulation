@@ -1,9 +1,11 @@
 package com.kani.main
 
-import com.kani.Surface
+import com.kani.draw.Surface
+import org.apache.commons.lang3.RandomUtils
 
 import java.awt.Point
-import javax.swing.{JFrame, WindowConstants}
+import java.awt.event.{ActionEvent, ActionListener}
+import javax.swing.{JFrame, Timer, WindowConstants}
 
 object DrawTest extends App {
   val surface = new Surface(32, 32, 16)
@@ -13,12 +15,24 @@ object DrawTest extends App {
   f.add(surface)
   f.setVisible(true)
 
-  surface.setPositions(List(new Point(0,0), new Point(2,1), new Point(5,10),new Point(31,31)))
-  surface.repaint()
+  val timer = new Timer(200, new ActionListener {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      surface.setPositions(getRandomPoints(500,32,32))
+      surface.repaint()
+    }
+  })
+  timer.start()
 
-  Thread.sleep(1000)
 
-  surface.setPositions(List(new Point(1,1), new Point(4,2), new Point(6,11),new Point(30,30)))
-  surface.repaint()
+  def getRandomPoints(n : Int, maxX : Int, maxY : Int) : List[Point] = {
+    List.range(0, n).map{
+      id => {
+        val x = RandomUtils.nextInt(0,maxX)
+        val y = RandomUtils.nextInt(0,maxY)
+        new Point(x,y)
+      }
+    }
+  }
 }
+
 
