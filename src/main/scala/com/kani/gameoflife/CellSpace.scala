@@ -3,26 +3,35 @@ package com.kani.gameoflife
 import java.awt.Point
 
 class CellSpace(m1: Array[Array[Cell]]) {
-  val m2 = Array.ofDim[Cell](32,32)
-
   def getNextCellSpace(): Array[Array[Cell]] = {
+    val m2 = Array.ofDim[Cell](32,32)
+
     for (y <- 0 to m1.size - 1) { // Y axis
       val xSeq = m1(y)
       for (x <- 0 to xSeq.size - 1) {
-        val cell = if(m1(y)(x) != null) m1(y)(x).copy()  else m1(y)(x) //copy instance
+        //for debug purposes
+        if(x ==0 && y==1){
+          println("here")
+        }
+
+        var cell = if(m1(y)(x) != null) m1(y)(x).copy()  else m1(y)(x) //copy instance
         if (cell != null && canDie(cell)) {
           cell.letDie()
+          cell = null
+          println(s"let die $x, $y")
         }
 
         if(cell == null){
           val candidateCell = Cell(new Point(x,y))
           if(canPopulate(candidateCell)){
             candidateCell.letPopulate();
-            m2(y)(x) = candidateCell
+            cell = candidateCell
+            println(s"populate > " + cell.p.x + ","+ cell.p.y)
           }
         }else {
           if (!cell.isAlive() && canPopulate(cell)) {
             cell.letPopulate()
+            println(s"populate > " + cell.p.x + ","+ cell.p.y)
           }
         }
 

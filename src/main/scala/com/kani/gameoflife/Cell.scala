@@ -5,7 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
 case class Cell(p: Point, al: Boolean = false) {
-  var alive = al
+  private var alive = al
 
   def isAlive(): Boolean = {
     alive

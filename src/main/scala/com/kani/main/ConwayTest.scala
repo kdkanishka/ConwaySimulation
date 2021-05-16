@@ -3,13 +3,14 @@ package com.kani.main
 import com.kani.draw.Surface
 import com.kani.gameoflife.{Cell, CellSpace}
 import com.kani.main.DrawTest.{getRandomPoints, surface}
+import com.kani.utils.CellHelper
 import org.apache.commons.lang3.RandomUtils
 
 import java.awt.Point
 import java.awt.event.{ActionEvent, ActionListener}
 import javax.swing.{JFrame, Timer, WindowConstants}
 
-object ConwayTest extends App {
+object ConwayTest extends App with CellHelper {
   val surface = new Surface(32, 32, 16)
   val f = new JFrame()
   f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
@@ -17,44 +18,58 @@ object ConwayTest extends App {
   f.add(surface)
   f.setVisible(true)
 
-  val m1 = Array.ofDim[Cell](32,32)
-  m1(0)(0) = Cell(new Point(0,0))
-  m1(1)(0) = Cell(new Point(0,1),true)
-  m1(0)(1) = Cell(new Point(1,0),true)
-  m1(1)(1) = Cell(new Point(1,1),true)
+  val m1 = Array.ofDim[Cell](32, 32)
+//  newCell(m1, 0, 0, false)
+//  newCell(m1, 0, 1, true)
+//  newCell(m1, 1, 0, true)
+//  newCell(m1, 1, 1, true)
 
-  val cellSpace = new CellSpace(m1)
+//  newCell(m1, 10, 5, true)
+//  newCell(m1, 10, 6, true)
+//  newCell(m1, 10, 7, true)
 
-  val m2 = cellSpace.getNextCellSpace()
+  newCell(m1, 20, 20, true)
+  newCell(m1, 22, 20, true)
+  newCell(m1, 21, 21, true)
+  newCell(m1, 22, 21, true)
+  newCell(m1, 21, 22, true)
+  newCell(m1, 22, 22, true)
 
+//  newCell(m1,0,1,true)
+//  newCell(m1,1,2,true)
+//  newCell(m1,2,0,true)
+//  newCell(m1,2,2,true)
+//  newCell(m1,3,1,true)
+
+  var cellSpace = new CellSpace(m1)
   surface.setPositions(toPoints(m1))
   surface.repaint()
-  println("frame 1")
 
-  Thread.sleep(500)
+  //  val newCells = cellSpace.getNextCellSpace()
+  //  surface.setPositions(toPoints(newCells))
+  //  surface.repaint()
+  //
+  //  cellSpace = new CellSpace(newCells)
 
-  surface.setPositions(toPoints(m2))
-  surface.repaint()
-  println("frame 2")
+  var counter = 0
+  val endCounter = 10
 
-  println("Done")
+  val timer = new Timer(1000, new ActionListener {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      if (endCounter == counter) {
+        e.getSource().asInstanceOf[Timer].stop()
+        println("Stop")
+      }
+      counter = counter + 1
 
 
+      val newCells = cellSpace.getNextCellSpace()
+      surface.setPositions(toPoints(newCells))
+      surface.repaint()
 
-  def toPoints(m : Array[Array[Cell]]) : List[Point] = {
-    val ccl = for{
-      xx <- m
-      cc <- xx
-    } yield cc
+      cellSpace = new CellSpace(newCells)
+    }
+  })
+  timer.start()
 
-    val cells = ccl.filter(ce => ce != null)
-
-    val liveCells = cells.filter(c => c.isAlive())
-
-    val xxxxx = for{
-      ccc <- liveCells
-    }yield ccc.p
-
-    xxxxx.toList
-  }
 }
